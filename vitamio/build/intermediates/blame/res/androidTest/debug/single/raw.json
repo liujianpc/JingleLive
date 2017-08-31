@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "E:\\androidPrj\\JingleLive\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\libarm.so",
+        "source": "E:\\androidPrj\\JingleLive\\vitamio\\build\\intermediates\\bundles\\debug\\res\\raw\\libarm.so"
+    },
+    {
+        "merged": "E:\\androidPrj\\AndroidMaterialDesignToolbar\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\raw\\libarm.so",
+        "source": "E:\\androidPrj\\AndroidMaterialDesignToolbar\\vitamio\\build\\intermediates\\bundles\\debug\\res\\raw\\libarm.so"
+    }
+]

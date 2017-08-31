@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="red">#bf360c</color>
+    <color name="ripple_red">#ffbf5232</color>
+
+    <color name="material_teal">#1abc9c</color>
+    <color name="ripple_material_teal">#ff149691</color>
+
+    <color name="blue">#304f9f</color>
+    <color name="grey">#95a5a6</color>
+    <color name="light">#7f8c8d</color>
+
+    <color name="colorPrimary">#2ecc71</color>
+    <color name="colorPrimaryDark">#34495e</color>
+
+    <color name="windowBackgroundColor">#333333</color>
+    <color name="black_translucent">#80000000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="material_blue">#3498db</color>
+
+
+</resources>
