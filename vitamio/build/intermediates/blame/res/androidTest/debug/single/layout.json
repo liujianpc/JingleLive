@@ -6,5 +6,9 @@
     {
         "merged": "E:\\androidPrj\\AndroidMaterialDesignToolbar\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\mediacontroller.xml",
         "source": "E:\\androidPrj\\AndroidMaterialDesignToolbar\\vitamio\\build\\intermediates\\bundles\\debug\\res\\layout\\mediacontroller.xml"
+    },
+    {
+        "merged": "E:\\EclipseWorkSpace\\JingleLive\\vitamio\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\mediacontroller.xml",
+        "source": "E:\\EclipseWorkSpace\\JingleLive\\vitamio\\build\\intermediates\\bundles\\debug\\res\\layout\\mediacontroller.xml"
     }
 ]

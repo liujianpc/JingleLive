@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -308,6 +307,7 @@ fragmentList.add(new PlayerFragment());*/
             }
         });*/
         // fragmentList.get(Config.currentItem).mVideoView.start();
+
         android.util.Log.d("OnPageSelect", "enter in");
         android.util.Log.d("OnPageSelect", "enter in");
         android.util.Log.d("OnPageSelect", "enter in");
@@ -357,9 +357,9 @@ fragmentList.add(new PlayerFragment());*/
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // // 设置全屏
             // // 设置全屏
-           getWindow().setFlags(
+          /* getWindow().setFlags(
                     WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
             toolbar.setVisibility(View.GONE);
             slidingTabLayout.setVisibility(View.GONE);
 
@@ -380,10 +380,10 @@ fragmentList.add(new PlayerFragment());*/
 
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-            WindowManager.LayoutParams attrs =getWindow()
+            /*WindowManager.LayoutParams attrs =getWindow()
                     .getAttributes();
             attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
-            getWindow().setAttributes(attrs);
+            getWindow().setAttributes(attrs);*/
             toolbar.setVisibility(View.VISIBLE);
             slidingTabLayout.setVisibility(View.VISIBLE);
 

@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,8 +16,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -144,6 +145,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
     /**
      * 当视图初始化并且对用户可见的时候去真正的加载数据
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void lazyLoad() {
 
         mVideoView = (MyVideoView) rootView.findViewById(R.id.vitamio_videoView0);
@@ -175,9 +177,18 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
         mVideoView.setOnErrorListener(this);
         playPasueBtn.setOnClickListener(this);
         join();
+        /*if (!Config.show) {
+            ll_room.setVisibility(View.GONE);
+            et_send.setVisibility(View.GONE);
+            fullButton.setSelected(true);
+        } else {
+            ll_room.setVisibility(View.VISIBLE);
+            et_send.setVisibility(View.VISIBLE);
+            fullButton.setSelected(false);
+        }*/
+        loadFullScreen();
     }
 
-    ;
 
     /**
      * 当视图已经对用户不可见并且加载过数据，如果需要在切换到其他页面时停止加载数据，可以覆写此方法
@@ -260,6 +271,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
         barrageView.addMessage(msg);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("deprecation")
     @Override
     public void onClick(View view) {
@@ -282,9 +294,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
                 break;
 
             case R.id.btn_fullscreen0:
-                if (isFull){
+                if (isFull) {
                     fullButton.setSelected(false);
-                }else {
+                } else {
                     fullButton.setSelected(true);
                 }
                 fullScreen();
@@ -339,9 +351,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void fullScreen() {
         if (isScreenOriatationPortrait(getContext())) {// 当屏幕是竖屏时
-            //full(true);//此处可以设置为隐去，无需再次调用全屏函数，因为在onConfigureChanged函数中会有一个全屏操作。
+
+            full(true);//此处可以设置为隐去，无需再次调用全屏函数，因为在onConfigureChanged函数中会有一个全屏操作。
             // 点击后变横屏
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 设置当前activity为横屏
             // 当横屏时 把除了视频以外的都隐藏
@@ -351,12 +365,16 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
             Config.show = false;
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
-            layout_video.setLayoutParams(new LinearLayout.LayoutParams(height, width));
-            mVideoView.setLayoutParams(new RelativeLayout.LayoutParams(height, width));
+            Resources resources = getResources();
+            int resId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            int naviHeight = resources.getDimensionPixelSize(resId);
+            layout_video.setLayoutParams(new LinearLayout.LayoutParams(height + naviHeight, width));
+            mVideoView.setLayoutParams(new RelativeLayout.LayoutParams(height + naviHeight, width));
             isFull = true;
 
 
-        } else {
+        } else {//横屏
+            Config.show = true;
             full(false);
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 设置当前activity为竖屏
             //显示其他组件
@@ -480,36 +498,38 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
     }
 
     //动态隐藏状态栏
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void full(boolean enable) {
         if (enable) {
            /* WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
             lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
             getActivity().getWindow().setAttributes(lp);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);*/
-            Window window = getActivity().getWindow();
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-           /* View decorView  = getActivity().getWindow().getDecorView();
-            int uiParams =  View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            // Window window = getActivity().getWindow();
+            // window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            View decorView = getActivity().getWindow().getDecorView();
+            int uiParams = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiParams);*/
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
+            decorView.setSystemUiVisibility(uiParams);
         } else {
          /*   WindowManager.LayoutParams attr = getActivity().getWindow().getAttributes();
             attr.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getActivity().getWindow().setAttributes(attr);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);*/
-           /* View decorView  = getActivity().getWindow().getDecorView();
-            int uiParams =  View.SYSTEM_UI_FLAG_FULLSCREEN;
+            View decorView = getActivity().getWindow().getDecorView();
+            int uiParams = View.SYSTEM_UI_FLAG_FULLSCREEN;
 
             decorView.setSystemUiVisibility(uiParams);
-            decorView.setOnClickListener(new View.OnClickListener() {
+           /* decorView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getContext(),"you click it", Toast.LENGTH_SHORT).show();                }
             });*/
-            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            // getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         }
     }
@@ -522,6 +542,45 @@ public class PlayerFragment extends Fragment implements View.OnClickListener,
      */
     public static boolean isScreenOriatationPortrait(Context context) {
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void loadFullScreen() {
+        if (isScreenOriatationPortrait(getContext())) {// 当屏幕是竖屏时
+            Config.show = true;
+            full(false);
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);// 设置当前activity为竖屏
+            //显示其他组件
+            ll_room.setVisibility(View.VISIBLE);
+            et_send.setVisibility(View.VISIBLE);
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = (int) (width * 9.0 / 16);
+            layout_video.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            mVideoView.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+            isFull = false;
+
+        } else {//横屏
+            full(true);//此处可以设置为隐去，无需再次调用全屏函数，因为在onConfigureChanged函数中会有一个全屏操作。
+            // 点击后变横屏
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);// 设置当前activity为横屏
+            // 当横屏时 把除了视频以外的都隐藏
+            //隐藏其他组件的代码
+            ll_room.setVisibility(View.GONE);
+            et_send.setVisibility(View.GONE);
+            Config.show = false;
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            Resources resources = getResources();
+            int resId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            int naviHeight = resources.getDimensionPixelSize(resId);
+            layout_video.setLayoutParams(new LinearLayout.LayoutParams(width + naviHeight, height));
+            mVideoView.setLayoutParams(new RelativeLayout.LayoutParams(width + naviHeight, height));
+            isFull = true;
+
+
+        }
 
     }
 }
